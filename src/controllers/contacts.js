@@ -20,3 +20,35 @@ export const getAllContactsController = async (req, res) => {
     data: contacts,
   });
 };
+
+export const deleteContactController = async (req, res) => {
+  const { contactId } = req.params;
+
+  const contact = await contactsService.deleteContact(contactId);
+
+  if (!contact) {
+    throw createError(404, "Contact not found");
+  }
+
+  res.status(204).send();
+};
+
+export const updateContactController = async (req, res) => {
+  const { contactId } = req.params;
+  const payload = req.body;
+
+  const updatedContact = await contactsService.updateContact(
+    contactId,
+    payload,
+  );
+
+  if (!updatedContact) {
+    throw createError(404, "Contact not found");
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: "Successfully patched a contact!",
+    data: updatedContact,
+  });
+};
