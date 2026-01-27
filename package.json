@@ -6,6 +6,7 @@
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
     "http-errors": "^2.0.1",
+    "joi": "^18.0.2",
     "mongodb": "^7.0.0",
     "mongoose": "^9.1.4",
     "nanoid": "^5.1.6",
