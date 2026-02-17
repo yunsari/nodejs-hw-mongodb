@@ -1,12 +1,16 @@
 {
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "create-http-error": "^1.0.3",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
     "http-errors": "^2.0.1",
     "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.0.0",
     "mongoose": "^9.1.4",
     "nanoid": "^5.1.6",
@@ -16,6 +20,7 @@
   },
   "name": "nodejs-hw-mongodb",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {

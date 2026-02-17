@@ -2,7 +2,10 @@ import createError from "http-errors";
 import * as contactsService from "../services/contacts.js";
 
 export const createContactController = async (req, res) => {
-  const contact = await contactsService.createContact(req.body);
+  const contact = await contactsService({
+    ...req.body,
+    userId: req.user.id, 
+  });
 
   res.status(201).json({
     status: 201,
@@ -12,59 +15,57 @@ export const createContactController = async (req, res) => {
 };
 
 export const getAllContactsController = async (req, res) => {
-  const {
-    page = 1,
-    perPage = 10,
-    sortBy = "name",
-    sortOrder = "asc",
-    type,
-    isFavourite,
-  } = req.query;
-
-  const contacts = await contactsService.getAllContacts({
-    page,
-    perPage,
-    sortBy,
-    sortOrder,
-    type,
-    isFavourite,
+  const result = await getAllContacts({
+    userId: req.user._id,
+    ...req.query,
   });
 
-  res.status(200).json({
+  res.json({
     status: 200,
     message: "Successfully found contacts!",
-    data: contacts,
+    data: result,
+  });
+};
+
+export const getContactController = async (req, res) => {
+  const contact = await getContactById(
+    req.params.contactId,
+    req.user._id
+  );
+
+  if (!contact) throw createHttpError(404);
+
+  res.json({
+    status: 200,
+    message: "Successfully found contact!",
+    data: contact,
   });
 };
 
 export const deleteContactController = async (req, res) => {
-  const { contactId } = req.params;
+  const contact = await deleteContact(
+    req.params.contactId,
+    req.user._id
+  );
 
-  const contact = await contactsService.deleteContact(contactId);
-
-  if (!contact) {
-    throw createError(404, "Contact not found");
-  }
+  if (!contact) throw createHttpError(404);
 
   res.status(204).send();
 };
 
 export const updateContactController = async (req, res) => {
-  const { contactId } = req.params;
-  const payload = req.body;
-
-  const updatedContact = await contactsService.updateContact(
-    contactId,
-    payload,
+  const contact = await updateContact(
+    req.params.contactId,
+    req.user._id,
+    req.body
   );
 
-  if (!updatedContact) {
-    throw createError(404, "Contact not found");
-  }
+  if (!contact) throw createHttpError(404);
 
-  res.status(200).json({
+  res.json({
     status: 200,
-    message: "Successfully patched a contact!",
-    data: updatedContact,
+    message: "Successfully updated contact!",
+    data: contact,
   });
 };
+

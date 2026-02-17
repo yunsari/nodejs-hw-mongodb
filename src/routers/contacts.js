@@ -8,6 +8,7 @@ import {
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { isValidId } from "../middlewares/isValidId.js";
+import { authenticate } from "../middlewares/authenticate.js";
 import {
   createContactSchema,
   updateContactSchema,
@@ -19,9 +20,11 @@ router.get("/", ctrlWrapper(getAllContactsController));
 
 router.post(
   "/",
+  authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
+
 
 router.patch(
   "/:contactId",
