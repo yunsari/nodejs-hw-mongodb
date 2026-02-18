@@ -1,8 +1,7 @@
-import createError from "http-errors";
 import * as contactsService from "../services/contacts.js";
 
 export const createContactController = async (req, res) => {
-  const contact = await contactsService({
+  const contact = await contactsService.createContact({
     ...req.body,
     userId: req.user.id, 
   });
@@ -15,7 +14,7 @@ export const createContactController = async (req, res) => {
 };
 
 export const getAllContactsController = async (req, res) => {
-  const result = await getAllContacts({
+  const result = await contactsService.getAllContacts({
     userId: req.user._id,
     ...req.query,
   });
@@ -28,7 +27,7 @@ export const getAllContactsController = async (req, res) => {
 };
 
 export const getContactController = async (req, res) => {
-  const contact = await getContactById(
+  const contact = await contactsService.getContactById(
     req.params.contactId,
     req.user._id
   );
@@ -43,7 +42,7 @@ export const getContactController = async (req, res) => {
 };
 
 export const deleteContactController = async (req, res) => {
-  const contact = await deleteContact(
+  const contact = await contactsService.deleteContact(
     req.params.contactId,
     req.user._id
   );
@@ -54,7 +53,7 @@ export const deleteContactController = async (req, res) => {
 };
 
 export const updateContactController = async (req, res) => {
-  const contact = await updateContact(
+  const contact = await contactsService.updateContact(
     req.params.contactId,
     req.user._id,
     req.body
