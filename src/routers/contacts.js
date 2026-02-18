@@ -16,7 +16,7 @@ import {
 
 const router = Router();
 
-router.get("/", ctrlWrapper(getAllContactsController));
+router.get("/", authenticate, ctrlWrapper(getAllContactsController));
 
 router.post(
   "/",
