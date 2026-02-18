@@ -1,38 +1,56 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   createContactController,
-  getAllContactsController,
   deleteContactController,
-  updateContactController,
-} from "../controllers/contacts.js";
-import { ctrlWrapper } from "../utils/ctrlWrapper.js";
-import { validateBody } from "../middlewares/validateBody.js";
-import { isValidId } from "../middlewares/isValidId.js";
-import { authenticate } from "../middlewares/authenticate.js";
+  getAllContactsController,
+  getContactByIdController,
+  patchContactController,
+  upsertContactController,
+} from '../controllers/contacts.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import {
   createContactSchema,
   updateContactSchema,
-} from "../validation/contacts.js";
+} from '../validation/contacts.js';
+import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
-const router = Router();
+const contactsRouter = Router();
 
-router.get("/", authenticate, ctrlWrapper(getAllContactsController));
+contactsRouter.use(authenticate);
+contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
-router.post(
-  "/",
-  authenticate,
+contactsRouter.get(
+  '/:contactId',
+  isValidId,
+  ctrlWrapper(getContactByIdController),
+);
+
+contactsRouter.post(
+  '/',
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
-
-router.patch(
-  "/:contactId",
+contactsRouter.patch(
+  '/:contactId',
   isValidId,
   validateBody(updateContactSchema),
-  ctrlWrapper(updateContactController),
+  ctrlWrapper(patchContactController),
 );
 
-router.delete("/:contactId", isValidId, ctrlWrapper(deleteContactController));
+contactsRouter.put(
+  '/:contactId',
+  isValidId,
+  validateBody(createContactSchema),
+  ctrlWrapper(upsertContactController),
+);
 
-export default router;
+contactsRouter.delete(
+  '/:contactId',
+  isValidId,
+  ctrlWrapper(deleteContactController),
+);
+
+export default contactsRouter;
