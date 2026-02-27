@@ -1,10 +1,11 @@
 {
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.9.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "create-http-error": "^1.0.3",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "eslint": "^9.39.2",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
@@ -13,7 +14,9 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.1",
+    "multer": "^2.0.2",
     "nanoid": "^5.1.6",
+    "nodemailer": "^8.0.1",
     "nodemon": "^3.1.11",
     "path": "^0.12.7",
     "pino-http": "^11.0.0"

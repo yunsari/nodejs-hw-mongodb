@@ -17,6 +17,10 @@ const contactsSchema = new Schema(
       required: false,
       match: [emailRegexp, 'is invalid'],
     },
+    photo: {
+      type: String,
+      default: null,
+    },
     isFavourite: {
       type: Boolean,
       default: false,

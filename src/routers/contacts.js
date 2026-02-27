@@ -53,4 +53,17 @@ contactsRouter.delete(
   ctrlWrapper(deleteContactController),
 );
 
+contactsRouter.post(
+  '/',
+  upload.single('photo'),
+  validateBody(createContactSchema),
+  ctrlWrapper(createContact)
+);
+
+contactsRouter.patch(
+  '/:contactId',
+  upload.single('photo'),
+  ctrlWrapper(updateContact)
+);
+
 export default contactsRouter;
