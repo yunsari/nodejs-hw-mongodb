@@ -16,6 +16,12 @@ import {
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
+import multer from 'multer';
+
+// memoryStorage test için
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 const contactsRouter = Router();
 
 contactsRouter.use(authenticate);
@@ -29,15 +35,19 @@ contactsRouter.get(
 
 contactsRouter.post(
   '/',
+  authenticate,
+  upload.single('photo'),
   validateBody(createContactSchema),
-  ctrlWrapper(createContactController),
+  ctrlWrapper(createContactController)
 );
 
 contactsRouter.patch(
   '/:contactId',
+  authenticate,
   isValidId,
+  upload.single('photo'),
   validateBody(updateContactSchema),
-  ctrlWrapper(patchContactController),
+  ctrlWrapper(patchContactController)
 );
 
 contactsRouter.put(
@@ -51,19 +61,6 @@ contactsRouter.delete(
   '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController),
-);
-
-contactsRouter.post(
-  '/',
-  upload.single('photo'),
-  validateBody(createContactSchema),
-  ctrlWrapper(createContact)
-);
-
-contactsRouter.patch(
-  '/:contactId',
-  upload.single('photo'),
-  ctrlWrapper(updateContact)
 );
 
 export default contactsRouter;
