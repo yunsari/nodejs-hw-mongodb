@@ -9,6 +9,8 @@ import createHttpError from 'http-errors';
 import { sendEmail } from '../utils/sendEmail.js';
 import { UsersCollection } from '../db/models/user.js';
 import env from '../utils/env.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 export const sendResetEmail = async (req, res, next) => {
   try {
