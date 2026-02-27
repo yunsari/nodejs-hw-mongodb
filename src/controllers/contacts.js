@@ -47,7 +47,12 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
-   const contactData = { ...req.body, userId: req.user._id };
+  const contactData = {
+    userId: req.user._id,
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email || '',
+  };
 
   try {
     if (req.file) {
@@ -69,14 +74,15 @@ export const createContactController = async (req, res, next) => {
 export const patchContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
+    const updateData = { ...req.body };
 
     if (req.file) {
-      req.body.photo = req.file.buffer; 
+      updateData.photo = req.file.buffer;
     }
 
     const result = await updateContact(
       { _id: contactId, userId: req.user._id },
-      req.body
+      updateData
     );
 
     if (!result) {
