@@ -59,7 +59,7 @@ export const createContactController = async (req, res, next) => {
       contactData.photo = req.file.path || req.file.buffer;
     }
 
-    const contact = await createContact({ contactData });
+    const contact = await createContact(contactData);
 
     res.status(201).json({
       status: 201,
