@@ -1,4 +1,3 @@
-
 import {
   createContact,
   deleteContact,
@@ -48,12 +47,14 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
+   const contactData = { ...req.body, userId: req.user._id };
+
   try {
     if (req.file) {
-      req.body.photo = req.file.buffer;
+      contactData.photo = req.file.path || req.file.buffer;
     }
 
-    const contact = await createContact({ ...req.body, userId: req.user._id });
+    const contact = await createContact({ contactData });
 
     res.status(201).json({
       status: 201,
