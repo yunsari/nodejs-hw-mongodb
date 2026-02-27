@@ -10,7 +10,7 @@ import initMongoConnection from "./db/initMongoConnection.js";
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
-const PORT = Number(env("PORT", 3000));
+const PORT = Number(process.env.PORT || 3000);
 
 export const setupServer = async () => {
   await initMongoConnection();
