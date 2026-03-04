@@ -1,18 +1,32 @@
 import { Contact } from '../db/models/contacts.js';
 import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+import { v2 as cloudinary } from 'cloudinary';
+import { createContactService } from '../services/contacts.js';
 
-export const createContact = async (req, res) => {
-  let photoUrl = null;
+export const createContact = async (req, res, next) => {
+  try {
+    let photoUrl = null;
 
-  if (req.file) {
-    photoUrl = await uploadToCloudinary(req.file);
+    if (req.file) {
+      const result = await cloudinary.uploader.upload_stream({
+        folder: 'contacts',
+      });
+
+      photoUrl = result.secure_url;
+    }
+
+    const contact = await createContactService({
+      ...req.body,
+      userId: req.user._id,
+      photo: photoUrl,
+    });
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: contact,
+    });
+  } catch (err) {
+    next(err);
   }
-
-  const contact = await Contact.create({
-    ...req.body,
-    photo: photoUrl,
-    userId: req.user._id,
-  });
-
-  res.status(201).json(contact);
 };

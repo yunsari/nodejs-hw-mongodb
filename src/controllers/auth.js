@@ -8,6 +8,7 @@ import {
 import createHttpError from 'http-errors';
 import { sendEmail } from '../utils/sendEmail.js';
 import { UsersCollection } from '../db/models/user.js';
+import { SessionsCollection } from '../db/models/session.js';
 import env from '../utils/env.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -57,13 +58,17 @@ export const resetPassword = async (req, res, next) => {
     }
 
     let payload;
+
     try {
       payload = jwt.verify(token, env('JWT_SECRET'));
     } catch (err) {
       throw createHttpError(401, 'Token is expired or invalid.');
     }
 
-    const user = await User.findOne({ email: payload.email });
+    const user = await UsersCollection.findOne({
+      email: payload.email,
+    });
+
     if (!user) {
       throw createHttpError(404, 'User not found!');
     }
@@ -71,7 +76,10 @@ export const resetPassword = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
     await user.save();
-    user.tokens = []; await user.save();
+    
+    await SessionsCollection.deleteMany({
+      userId: user._id,
+    });
 
     res.status(200).json({
       status: 200,
