@@ -38,7 +38,7 @@ contactsRouter.post(
   authenticate,
   upload.single('photo'),
   validateBody(createContactSchema),
-  ctrlWrapper(createContact)
+  ctrlWrapper(createContactController)
 );
 
 contactsRouter.patch(

@@ -5,6 +5,7 @@ import {
   getContactById,
   updateContact,
 } from '../services/contacts.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
@@ -47,16 +48,17 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const contactData = {
-    userId: req.user._id,
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email || '',
-  };
+   try {
+    const contactData = {
+      userId: req.user._id,
+      name: req.body.name,
+      phoneNumber: req.body.phoneNumber,
+      email: req.body.email || '',
+    };
 
-  try {
     if (req.file) {
-      contactData.photo = req.file.path || req.file.buffer;
+      const uploaded = await uploadToCloudinary(req.file.buffer);
+      contactData.photo = uploaded.secure_url;
     }
 
     const contact = await createContact(contactData);
@@ -77,7 +79,8 @@ export const patchContactController = async (req, res, next) => {
     const updateData = { ...req.body };
 
     if (req.file) {
-      updateData.photo = req.file.buffer;
+      const uploaded = await uploadToCloudinary(req.file.buffer);
+      updateData.photo = uploaded.secure_url;
     }
 
     const result = await updateContact(
@@ -86,12 +89,12 @@ export const patchContactController = async (req, res, next) => {
     );
 
     if (!result) {
-      throw createHttpError(404, `Contact with id ${contactId} was not found`);
+      throw createHttpError(404, 'Contact not found');
     }
 
     res.status(200).json({
       status: 200,
-      message: `Successfully patched contact with id ${contactId}!`,
+      message: 'Successfully patched contact!',
       data: result.contact,
     });
   } catch (error) {
