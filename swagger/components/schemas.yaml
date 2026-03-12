@@ -1,0 +1,21 @@
+Contact:
+  type: object
+  properties:
+    _id:
+      type: string
+      example: "65f1a2c9e1c7c123456789ab"
+    name:
+      type: string
+      example: "Yunus Sarı"
+    phoneNumber:
+      type: string
+      example: "05551234567"
+    email:
+      type: string
+      example: "yunus@mail.com"
+    isFavourite:
+      type: boolean
+      example: false
+    contactType:
+      type: string
+      example: personal

@@ -10,7 +10,11 @@ import initMongoConnection from "./db/initMongoConnection.js";
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+
 const PORT = Number(process.env.PORT || 3000);
+const swaggerDocument = YAML.load("./docs/openapi.yaml");
 
 export const setupServer = async () => {
   await initMongoConnection();
@@ -31,6 +35,13 @@ export const setupServer = async () => {
   );
 
   app.use("/contacts", contactsRouter);
+
+
+  app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+  );
 
   app.use(notFoundHandler);
   app.use(errorHandler);

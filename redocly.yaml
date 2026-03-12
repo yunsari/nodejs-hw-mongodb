@@ -1,0 +1,6 @@
+apis:
+  sample@v1:
+    root: ./docs/openapi.yaml
+
+rules:
+  no-unused-components: error
